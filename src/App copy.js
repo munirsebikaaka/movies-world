@@ -47,17 +47,11 @@ const tempWatchedData = [
   },
 ];
 
-const KEY = "ef1735bd";
-
 const average = (arr) =>
   arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
 export default function App() {
-  const [movies, setMovies] = useState([]);
-  const [watched, setWatched] = useState([]);
-  fetch(`http://www.omdbapi.com/?apikey=${KEY}&s=king's man
-    `)
-    .then((res) => res.json())
-    .then((data) => console.log(data));
+  const [movies, setMovies] = useState(tempMovieData);
+  const [watched, setWatched] = useState(tempWatchedData);
 
   return (
     <>
