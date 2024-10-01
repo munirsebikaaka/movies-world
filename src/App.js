@@ -120,8 +120,8 @@ export default function App() {
 function ErrorMessage({ message }) {
   return (
     <p className="error">
-      <span>x</span>
-      {message}
+      {/* <span>x</span> */}
+      {/* {message} */}
     </p>
   );
 }
