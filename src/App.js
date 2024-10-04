@@ -53,7 +53,7 @@ const KEY = "ef1735bd";
 const average = (arr) =>
   arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
 export default function App() {
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState("wrong turn");
 
   const [movies, setMovies] = useState([]);
   const [watched, setWatched] = useState([]);
@@ -242,6 +242,29 @@ function Movie({ movie, handleSelectMovie }) {
 }
 
 function MoviesDetails({ selectedId, onCloseMovieD }) {
+  const [movie, setMovie] = useState({});
+  const {
+    Title: title,
+    Year: year,
+    Poster: poster,
+    Runtime: runtime,
+    imdbRating,
+    Plot: plot,
+    Released: released,
+    Actors: actors,
+    Director: director,
+    Genre: genre,
+  } = movie;
+  useEffect(function () {
+    async function getMovieDetails() {
+      const res =
+        await fetch(`http://www.omdbapi.com/?apikey=${KEY}&i=${selectedId}
+        `);
+      const data = await res.json();
+      setMovie(data);
+    }
+    getMovieDetails();
+  }, []);
   return (
     <div className="details">
       {selectedId}
