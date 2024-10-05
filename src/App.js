@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useState } from "react";
-
+import StarRating from "./StarRating";
 const tempMovieData = [
   {
     imdbID: "tt1375666",
@@ -255,6 +255,7 @@ function MoviesDetails({ selectedId, onCloseMovieD }) {
     Director: director,
     Genre: genre,
   } = movie;
+  console.log(title, year);
   useEffect(function () {
     async function getMovieDetails() {
       const res =
@@ -267,10 +268,31 @@ function MoviesDetails({ selectedId, onCloseMovieD }) {
   }, []);
   return (
     <div className="details">
-      {selectedId}
-      <button onClick={onCloseMovieD} className="btn-back">
-        x
-      </button>
+      <header>
+        <button onClick={onCloseMovieD} className="btn-back">
+          x
+        </button>
+        <img src={poster} alt={`poster of ${movie}`} />
+        <div className="details-overview">
+          <h2>{title}</h2>
+          <p>
+            {released} &bull; {runtime}
+          </p>
+          <p>{genre}</p>
+          <p>
+            <span>⭐️</span>
+            {imdbRating} IMDB rating
+          </p>
+        </div>
+      </header>
+      <section>
+        <StarRating />
+        <p>
+          <em>{plot}</em>
+        </p>
+        <p>Staring {actors}</p>
+        <p>Directed by {director}</p>
+      </section>
     </div>
   );
 }
