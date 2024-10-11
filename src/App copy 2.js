@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { useState } from "react";
 import StarRating from "./StarRating";
 
@@ -7,7 +7,7 @@ const KEY = "ef1735bd";
 const average = (arr) =>
   arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
 export default function App() {
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState("wrong turn");
 
   const [movies, setMovies] = useState([]);
   const [watched, setWatched] = useState([]);
@@ -15,12 +15,12 @@ export default function App() {
   const [error, setError] = useState("");
   const [selectedId, setSelectedId] = useState(null);
 
-  //   useEffect(function () {
-  //     fetch(`https://restcountries.com/v3.1/name/Uganda
-  // `)
-  //       .then((res) => res.json())
-  //       .then((data) => console.log(data));
-  //   }, []);
+  useEffect(function () {
+    fetch(`https://restcountries.com/v3.1/name/Uganda
+`)
+      .then((res) => res.json())
+      .then((data) => console.log(data));
+  }, []);
 
   function handleSelectMovie(id) {
     setSelectedId(id);
@@ -31,20 +31,19 @@ export default function App() {
 
   function hundleAddWatched(movie) {
     setWatched((watched) => [...watched, movie]);
-    localStorage.getItem("watched", JSON.stringify([...watched, movie]));
   }
 
   useEffect(
     function () {
-      // const controller = AbortController();
+      const controller = AbortController();
       setIsLoading(true);
       setError("");
       try {
         async function fetchMovies() {
           const res = await fetch(
             `http://www.omdbapi.com/?apikey=${KEY}&s=${query}
-        `
-            // { signal: controller.signal }
+        `,
+            { signal: controller.signal }
           );
 
           if (!res.ok)
@@ -59,9 +58,9 @@ export default function App() {
           return;
         }
         fetchMovies();
-        // return function () {
-        //   controller.abort();
-        // };
+        return function () {
+          controller.abort();
+        };
       } catch (err) {
         setError(err.message);
       } finally {
@@ -132,14 +131,6 @@ function Logo() {
   );
 }
 function Search({ query, setQuery }) {
-  const inputEl = useRef(null);
-  useEffect(function () {
-    function callBack(e) {
-      if (e.code === "Enter") inputEl.current.focus();
-    }
-    document.addEventListener("keydown", callBack);
-    return () => document.addEventListener("keydown", callBack);
-  }, []);
   return (
     <input
       className="search"
@@ -147,7 +138,6 @@ function Search({ query, setQuery }) {
       placeholder="Search movies..."
       value={query}
       onChange={(e) => setQuery(e.target.value)}
-      ref={inputEl}
     />
   );
 }
@@ -174,7 +164,27 @@ function Box({ children }) {
     </div>
   );
 }
+/*
+function WatchedList() {
+  const [isOpen2, setIsOpen2] = useState(true);
 
+  return (
+    <div className="box">
+      <button
+        className="btn-toggle"
+        onClick={() => setIsOpen2((open) => !open)}
+      >
+        {isOpen2 ? "–" : "+"}
+      </button>
+      {isOpen2 && (
+        <>
+          
+        </>
+      )}
+    </div>
+  );
+}
+  */
 function MoviesList({ movies, handleSelectMovie }) {
   return (
     <ul className="list list-movies">
