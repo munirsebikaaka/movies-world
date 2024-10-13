@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import { useState } from "react";
 import StarRating from "./StarRating";
+import { useMovies } from "./useMovies";
 
 const KEY = "ef1735bd";
 
@@ -8,19 +9,10 @@ const average = (arr) =>
   arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
 export default function App() {
   const [query, setQuery] = useState("");
-
-  const [movies, setMovies] = useState([]);
   const [watched, setWatched] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
   const [selectedId, setSelectedId] = useState(null);
 
-  //   useEffect(function () {
-  //     fetch(`https://restcountries.com/v3.1/name/Uganda
-  // `)
-  //       .then((res) => res.json())
-  //       .then((data) => console.log(data));
-  //   }, []);
+  useMovies(query);
 
   function handleSelectMovie(id) {
     setSelectedId(id);
@@ -33,43 +25,6 @@ export default function App() {
     setWatched((watched) => [...watched, movie]);
     localStorage.getItem("watched", JSON.stringify([...watched, movie]));
   }
-
-  useEffect(
-    function () {
-      // const controller = AbortController();
-      setIsLoading(true);
-      setError("");
-      try {
-        async function fetchMovies() {
-          const res = await fetch(
-            `http://www.omdbapi.com/?apikey=${KEY}&s=${query}
-        `
-            // { signal: controller.signal }
-          );
-
-          if (!res.ok)
-            throw new Error("Something went wrong with fectching movies ");
-          const data = await res.json();
-          if (data.Response === "False") throw new Error("Movie not found");
-          setMovies(data.Search);
-        }
-        if (query.length < 4) {
-          setMovies([]);
-          setError("");
-          return;
-        }
-        fetchMovies();
-        // return function () {
-        //   controller.abort();
-        // };
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setIsLoading(false);
-      }
-    },
-    [query]
-  );
 
   return (
     <>
