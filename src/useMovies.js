@@ -1,20 +1,22 @@
 import { useState, useEffect } from "react";
 
+const KEY = "ef1735bd";
+
 export function useMovies(query) {
   const [movies, setMovies] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   useEffect(
     function () {
-      // const controller = AbortController();
+      const controller = new AbortController();
       setIsLoading(true);
       setError("");
       try {
         async function fetchMovies() {
           const res = await fetch(
             `http://www.omdbapi.com/?apikey=${KEY}&s=${query}
-            `
-            // { signal: controller.signal }
+            `,
+            { signal: controller.signal }
           );
 
           if (!res.ok)
@@ -29,9 +31,9 @@ export function useMovies(query) {
           return;
         }
         fetchMovies();
-        // return function () {
-        //   controller.abort();
-        // };
+        return function () {
+          controller.abort();
+        };
       } catch (err) {
         setError(err.message);
       } finally {
@@ -40,4 +42,5 @@ export function useMovies(query) {
     },
     [query]
   );
+  return { movies, isLoading, error };
 }

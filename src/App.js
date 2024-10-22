@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import { useState } from "react";
 import StarRating from "./StarRating";
 import { useMovies } from "./useMovies";
+import { useKey } from "./useKey";
 
 const KEY = "ef1735bd";
 
@@ -12,7 +13,7 @@ export default function App() {
   const [watched, setWatched] = useState([]);
   const [selectedId, setSelectedId] = useState(null);
 
-  useMovies(query);
+  const { movies, isLoading, error } = useMovies(query);
 
   function handleSelectMovie(id) {
     setSelectedId(id);
@@ -88,13 +89,7 @@ function Logo() {
 }
 function Search({ query, setQuery }) {
   const inputEl = useRef(null);
-  useEffect(function () {
-    function callBack(e) {
-      if (e.code === "Enter") inputEl.current.focus();
-    }
-    document.addEventListener("keydown", callBack);
-    return () => document.addEventListener("keydown", callBack);
-  }, []);
+  useKey("Escape");
   return (
     <input
       className="search"
